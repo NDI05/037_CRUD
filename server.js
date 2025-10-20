@@ -56,7 +56,17 @@ app.put('/api/users/:id', (req, res)=>{
     });
 })
 
+app.delete('/api/users/:id', (req, res)=>{
+    const {id} = req.params;
 
+    db.query('DELETE FROM mahasiswa WHERE id = ?', [id], (err)=>{
+        if(err){
+            console.error(err)
+            return res.status(500).json({message: 'Database Error'});
+        }
+        res.json({message: 'User Deleted Successfully'});
+    });
+})
 
 app.listen(port, ()=>{
     console.log(`Server Berjalan di Port ${port}`)
