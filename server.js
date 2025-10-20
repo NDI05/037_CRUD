@@ -22,6 +22,7 @@ app.get('/api/users', (req, res) =>{
     })
 })
 
+//POST END POINT
 app.post('/api/users', (req, res)=>{
     const {nama, nim, kelas} = req.body;
 
@@ -29,7 +30,7 @@ app.post('/api/users', (req, res)=>{
         return res.status(400).json({message: 'All Field Is Required'})
     }
     
-    db.query('INSERT INTO mahasiswa (nama, nim, kelas) VALUES (?, ?, ?)', [nama, nim, kelas], (err, result)=>{
+    db.query('INSERT INTO mahasiswa (nama, nim, kelas) VALUES (?, ?, ?)', [nama, nim, kelas], (err)=>{
         if(err){
             console.error(err)
             return res.status(500).json({message: 'Database Error'});
@@ -37,6 +38,25 @@ app.post('/api/users', (req, res)=>{
         res.status(201).json({message: 'User Created Successfully'});
     });
 })
+
+app.put('/api/users/:id', (req, res)=>{
+    const {nama, kelas, nim} = req.body;
+    const {id} = req.params;
+
+    if (!nama || !id || !kelas || !nim){
+        return res.status(400).json({message: 'All Field Is Required'})
+    }
+
+    db.query('UPDATE mahasiswa SET nama = ?, kelas = ?, nim = ? WHERE id = ?', [nama, kelas, nim, id], (err)=>{
+        if(err){
+            console.error(err)
+            return res.status(500).json({message: 'Database Error'});
+        }
+        res.json({message: 'User Updated Successfully'});
+    });
+})
+
+
 
 app.listen(port, ()=>{
     console.log(`Server Berjalan di Port ${port}`)
